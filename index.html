@@ -112,6 +112,7 @@
     <li class="fragment">🛒 &nbsp;Shared shopping list for me &amp; Jaqueline</li>
     <li class="fragment">🐦 &nbsp;Twitter/X managed by Grizman (sub-agent)</li>
     <li class="fragment">🎫 &nbsp;Spond — accept/decline frisbee practice</li>
+    <li class="fragment">📧 &nbsp;Forward a receipt by email → Visma handles it</li>
     <li class="fragment">🌤️ &nbsp;Weather, questions, reminders — all via WhatsApp</li>
     <li class="fragment">🔊 &nbsp;Voice messages in, voice messages out</li>
   </ul>
@@ -145,6 +146,10 @@
     <div class="setup-item fragment">
       <strong>⏰ Cron jobs</strong>
       Scheduled tasks — retries, nightly checks, reminders.
+    </div>
+    <div class="setup-item fragment">
+      <strong>📧 Gmail — j.a.r.v.i.s@gmail.com</strong>
+      Dedicated inbox. Forward receipts by email — Jarvis reads and acts on them.
     </div>
     <div class="setup-item fragment">
       <strong>🐙 GitHub — Byrens-AiBot-JARVIS</strong>
@@ -239,7 +244,21 @@
   <aside class="notes">Six steps, zero manual work. The whole thing runs in about 30 seconds. The queue system means even weekend purchases that haven't hit the system yet will be handled automatically.</aside>
 </section>
 
-<!-- ⑧ SUB-AGENTS -->
+<!-- ⑧ GMAIL FLOW -->
+<section>
+  <h2>The Gmail Flow 📧</h2>
+  <div class="flow">
+    <div class="step fragment"><span class="num">1</span> 📧 Email arrives at j.a.r.v.i.s.aibot.openclaw@gmail.com</div>
+    <div class="step fragment"><span class="num">2</span> ⚡ Google Pub/Sub notifies Jarvis in real time — no polling</div>
+    <div class="step fragment"><span class="num">3</span> 🤖 Jarvis reads sender, subject, attachments</div>
+    <div class="step fragment"><span class="num">4</span> 🧠 Decides what to do — receipt? → Visma. Question? → reply.</div>
+    <div class="step fragment"><span class="num">5</span> ✅ Action taken — confirmation sent back</div>
+  </div>
+  <p class="fragment" style="font-size:.65em; margin-top:.8em; color:var(--accent);">Forward a receipt by email → same Visma automation as WhatsApp 🧾</p>
+  <aside class="notes">The Gmail integration uses Google Pub/Sub — when a mail arrives, Google pushes a notification instantly via Tailscale Funnel to the Mac, which wakes Jarvis. No polling, no delays. Same Visma automation runs whether the receipt comes via WhatsApp or email.</aside>
+</section>
+
+<!-- ⑨ SUB-AGENTS -->
 <section>
   <h2>Jarvis has a team 👥</h2>
   <div class="agents">
@@ -276,8 +295,8 @@
       Tax rules, VAT, declarations. A dedicated finance brain.
     </div>
     <div class="future-item fragment">
-      <span class="tag">📧 Jarvis gets email</span>
-      Forward receipts — he handles the whole conversation.
+      <span class="tag">🏠 Household economy AI</span>
+      Track spending, budgets, savings. Know where the money goes.
     </div>
     <div class="future-item fragment">
       <span class="tag">🥗 Food & calorie logging</span>
