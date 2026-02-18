@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meet Jarvis — OpenClaw Demo</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <style>
+    :root {
+      --accent: #00ff88;
+      --accent2: #00cfff;
+      --dim: rgba(255,255,255,0.55);
+    }
+
+    /* Base sizing — everything scales from here */
+    .reveal .slides section { font-size: 0.82em; box-sizing: border-box; }
+    .reveal h1 { color: var(--accent); letter-spacing: -1px; font-size: 2em; margin-bottom: .2em; }
+    .reveal h2 { color: var(--accent); letter-spacing: -1px; font-size: 1.4em; margin-bottom: .35em; margin-top: 0; }
+    .reveal h3 { color: var(--accent2); font-size: .85em; }
+    .reveal .subtitle { color: var(--dim); font-size: 1em; margin-top: -.1em; }
+    .reveal .byline { color: var(--dim); font-size: 0.5em; margin-top: 1.2em; letter-spacing: 2px; text-transform: uppercase; }
+    .reveal ul { list-style: none; padding: 0; margin: 0; }
+    .reveal ul li { padding: .22em 0; font-size: .82em; line-height: 1.3; }
+    .reveal ul li::before { content: "→ "; color: var(--accent); font-weight: bold; }
+    .accent { color: var(--accent); }
+    .accent2 { color: var(--accent2); }
+    .dim { color: var(--dim); }
+
+    /* Chat bubble styles */
+    .chat { max-width: 580px; margin: 0 auto; text-align: left; }
+    .bubble { display: inline-block; padding: .4em .85em; border-radius: 16px; margin: .2em 0; font-size: .7em; max-width: 75%; line-height: 1.4; }
+    .bubble.user { background: #25d366; color: #000; border-bottom-right-radius: 4px; float: right; clear: both; }
+    .bubble.bot  { background: #2a2a2a; color: #eee; border-bottom-left-radius: 4px; float: left; clear: both; border: 1px solid #444; }
+    .bubble.check { background: #1a3a2a; color: var(--accent); border: 1px solid var(--accent); float: left; clear: both; border-bottom-left-radius: 4px; }
+    .clearfix { clear: both; }
+    .chat-label { font-size: .48em; color: var(--dim); margin: .15em .5em; }
+    .chat-label.right { text-align: right; }
+
+    /* Columns */
+    .cols { display: flex; gap: 1em; justify-content: center; align-items: flex-start; }
+    .col { flex: 1; background: rgba(255,255,255,.04); border-radius: 10px; padding: .7em .9em; border: 1px solid rgba(255,255,255,.1); }
+    .col h3 { margin-top: 0; margin-bottom: .4em; font-size: .8em; }
+    .col p { font-size: .65em; color: var(--dim); margin: 0 0 .4em; }
+    .col ul li { font-size: .68em; padding: .15em 0; }
+
+    /* Flow steps */
+    .flow { display: flex; flex-direction: column; gap: .38em; max-width: 580px; margin: 0 auto; }
+    .step { display: flex; align-items: center; gap: .7em; background: rgba(255,255,255,.05); border-radius: 8px; padding: .45em .85em; border-left: 3px solid var(--accent); font-size: .75em; }
+    .step .num { color: var(--accent); font-weight: bold; font-size: 1em; min-width: 1.4em; }
+
+    /* Agent cards */
+    .agents { display: flex; gap: 1em; justify-content: center; }
+    .agent-card { background: rgba(255,255,255,.05); border-radius: 12px; padding: .9em 1em; border: 1px solid rgba(255,255,255,.12); text-align: center; flex: 1; }
+    .agent-card .emoji { font-size: 1.8em; }
+    .agent-card h3 { margin: .25em 0 .15em; font-size: .82em; }
+    .agent-card p { font-size: .62em; color: var(--dim); margin: 0; line-height: 1.4; }
+
+    /* Future items */
+    .future-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .6em; max-width: 660px; margin: 0 auto; }
+    .future-item { background: rgba(0,255,136,.07); border: 1px solid rgba(0,255,136,.2); border-radius: 9px; padding: .55em .85em; font-size: .7em; line-height: 1.4; }
+    .future-item .tag { color: var(--accent); font-weight: bold; display: block; margin-bottom: .1em; }
+
+    /* CTA */
+    .cta-box { background: rgba(0,207,255,.08); border: 1px solid var(--accent2); border-radius: 12px; padding: 1em 1.8em; display: inline-block; }
+    .cta-box a { color: var(--accent2); text-decoration: none; }
+    .cta-box p { margin: .25em 0; font-size: .85em; }
+
+    /* Setup diagram */
+    .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .6em; max-width: 680px; margin: 0 auto; }
+    .setup-item { background: rgba(255,255,255,.05); border-radius: 9px; padding: .6em .85em; font-size: .73em; border-left: 3px solid var(--accent2); line-height: 1.4; }
+    .setup-item strong { color: var(--accent2); display: block; margin-bottom: .15em; }
+
+    section.present, section.future { outline: none !important; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ① TITLE -->
+<section data-auto-animate>
+  <div style="margin-bottom:.5em; font-size:3.5em;">🤖</div>
+  <h1 style="font-size:2.4em;">Meet Jarvis</h1>
+  <p style="color:var(--accent2); font-size:.55em; letter-spacing:.12em; text-transform:uppercase; margin-top:-.3em; margin-bottom:.4em;">Just · A · Rather · Very · Intelligent · System</p>
+  <p class="subtitle">Your AI assistant — always on, always working</p>
+  <p class="byline">Built with OpenClaw &nbsp;·&nbsp; Powered by Claude (Anthropic)</p>
+  <aside class="notes">Welcome everyone. Today I want to show you something I've been building — an AI assistant called Jarvis that lives on my Mac and is connected to WhatsApp. It's not just a chatbot. It actually does things.</aside>
+</section>
+
+<!-- ② WHAT IS IT -->
+<section>
+  <h2>What even is this?</h2>
+  <ul>
+    <li class="fragment">An AI assistant running <span class="accent">24/7</span> on my Mac</li>
+    <li class="fragment">Connected to <span class="accent">WhatsApp</span> — just send a message</li>
+    <li class="fragment">Backed by <span class="accent">Claude</span> (Anthropic's latest model)</li>
+    <li class="fragment">Not just a chatbot — it <span class="accent">acts</span></li>
+    <li class="fragment">Runs automations, controls browsers, reads files, calls APIs</li>
+    <li class="fragment">I gave it a personality. It has opinions. 😏</li>
+  </ul>
+  <aside class="notes">OpenClaw is the framework. It's like a runtime for AI agents. It connects Claude to the real world — WhatsApp, tools, automations. It runs on your own machine so your data stays local.</aside>
+</section>
+
+<!-- ③ WHAT WE'VE BUILT -->
+<section>
+  <h2>What we've built 🏗️</h2>
+  <ul>
+    <li class="fragment">📸 &nbsp;Send a receipt → <span class="accent">Visma gets it automatically</span></li>
+    <li class="fragment">⏱️ &nbsp;Time reporting in Blikk &amp; eWork — <span class="accent">fully automated</span></li>
+    <li class="fragment">🛒 &nbsp;Shared shopping list for me &amp; Jaqueline</li>
+    <li class="fragment">🐦 &nbsp;Twitter/X managed by Grizman (sub-agent)</li>
+    <li class="fragment">🎫 &nbsp;Spond — accept/decline frisbee practice</li>
+    <li class="fragment">🌤️ &nbsp;Weather, questions, reminders — all via WhatsApp</li>
+    <li class="fragment">🔊 &nbsp;Voice messages in, voice messages out</li>
+  </ul>
+  <aside class="notes">All of this via WhatsApp. Just message it like a person. No apps to open, no dashboards. It works while I sleep.</aside>
+</section>
+
+<!-- ④ SETUP -->
+<section>
+  <h2>How it's set up ⚙️</h2>
+  <div class="setup-grid">
+    <div class="setup-item fragment">
+      <strong>🖥️ OpenClaw on Mac</strong>
+      Always on — starts automatically when the Mac boots.
+    </div>
+    <div class="setup-item fragment">
+      <strong>📱 Dedicated WhatsApp number</strong>
+      Own SIM card. Jarvis has its own number.
+    </div>
+    <div class="setup-item fragment">
+      <strong>🔑 1Password</strong>
+      Credentials fetched securely. No hardcoded passwords.
+    </div>
+    <div class="setup-item fragment">
+      <strong>🌐 Playwright</strong>
+      Headless browser — automates Visma, Blikk, eWork.
+    </div>
+    <div class="setup-item fragment">
+      <strong>📂 Skills</strong>
+      Custom automations. Scripts + instructions Jarvis follows.
+    </div>
+    <div class="setup-item fragment">
+      <strong>⏰ Cron jobs</strong>
+      Scheduled tasks — retries, nightly checks, reminders.
+    </div>
+  </div>
+  <aside class="notes">The setup took a few evenings. OpenClaw handles the AI orchestration. We write small Node.js scripts for the automations — called Skills. 1Password keeps everything secure.</aside>
+</section>
+
+<!-- ⑤ SOUL / SKILLS / TOOLS -->
+<section>
+  <h2>Skills, Tools &amp; Soul</h2>
+  <div class="cols">
+    <div class="col fragment">
+      <h3>🧠 Soul</h3>
+      <p style="font-size:.7em; color:var(--dim)">Defined in <code>SOUL.md</code></p>
+      <ul>
+        <li>Sharp &amp; calm</li>
+        <li>Dry wit</li>
+        <li>Honest, not sycophantic</li>
+        <li>Asks when unsure</li>
+        <li>Evolves over time</li>
+      </ul>
+    </div>
+    <div class="col fragment">
+      <h3>🛠️ Skills</h3>
+      <p style="font-size:.7em; color:var(--dim)">Custom automations</p>
+      <ul>
+        <li>Visma receipts</li>
+        <li>Blikk time reports</li>
+        <li>eWork time reports</li>
+        <li>Twitter/X</li>
+        <li>Spond attendance</li>
+      </ul>
+    </div>
+    <div class="col fragment">
+      <h3>⚡ Tools</h3>
+      <p style="font-size:.7em; color:var(--dim)">Built-in capabilities</p>
+      <ul>
+        <li>Web search</li>
+        <li>Browser control</li>
+        <li>Shell / exec</li>
+        <li>1Password</li>
+        <li>TTS / Voice</li>
+        <li>Memory &amp; files</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">The Soul file is what makes Jarvis feel like a person rather than a tool. Skills are the custom automations we write. Tools are the primitives OpenClaw provides out of the box.</aside>
+</section>
+
+<!-- ⑥ WHATSAPP -->
+<section>
+  <h2>WhatsApp Integration 📱</h2>
+  <div class="chat">
+    <div class="chat-label right">Johan</div>
+    <div class="bubble user">Kvitto. Lägg som Fika 📸</div>
+    <div class="clearfix"></div>
+
+    <div class="chat-label">Jarvis 🤖</div>
+    <div class="bubble bot fragment">ICA Supermarket, 438,91 kr — kör! 🔄</div>
+    <div class="clearfix"></div>
+
+    <div class="bubble check fragment">✅ Bifogat i Visma &amp; sparat</div>
+    <div class="clearfix"></div>
+
+    <div style="margin-top:1.2em; clear:both;"></div>
+    <div class="chat-label right">Johan</div>
+    <div class="bubble user fragment">Rapportera en normal vecka i Blikk</div>
+    <div class="clearfix"></div>
+
+    <div class="chat-label">Jarvis 🤖</div>
+    <div class="bubble check fragment">✅ 40h rapporterade i Blikk — veckan låst 🔒</div>
+    <div class="clearfix"></div>
+  </div>
+  <aside class="notes">This is what it looks like in practice. Photo of a receipt, one line of text, done. Voice messages work both ways. It even queues receipts if the expense hasn't appeared in Visma yet and retries overnight.</aside>
+</section>
+
+<!-- ⑦ VISMA FLOW -->
+<section>
+  <h2>The Visma Flow 🧾</h2>
+  <div class="flow">
+    <div class="step fragment"><span class="num">1</span> 📱 Send receipt photo on WhatsApp</div>
+    <div class="step fragment"><span class="num">2</span> 🤖 Jarvis reads amount, date, merchant from image</div>
+    <div class="step fragment"><span class="num">3</span> 🔑 Auto-login to Visma via 1Password + Playwright</div>
+    <div class="step fragment"><span class="num">4</span> 🔍 Finds matching card transaction by amount &amp; date</div>
+    <div class="step fragment"><span class="num">5</span> 📎 Uploads receipt → AI scans → fills fields</div>
+    <div class="step fragment"><span class="num">6</span> ✅ Saved — you get a WhatsApp confirmation</div>
+  </div>
+  <p class="fragment dim" style="font-size:.65em; margin-top:.8em;">If expense not in Visma yet → queued → retried nightly at 01:00 🌙</p>
+  <aside class="notes">Six steps, zero manual work. The whole thing runs in about 30 seconds. The queue system means even weekend purchases that haven't hit the system yet will be handled automatically.</aside>
+</section>
+
+<!-- ⑧ SUB-AGENTS -->
+<section>
+  <h2>Jarvis has a team 👥</h2>
+  <div class="agents">
+    <div class="agent-card fragment">
+      <div class="emoji">🎯</div>
+      <h3>Jarvis</h3>
+      <p>Main coordinator. Your primary contact. Delegates, orchestrates, remembers.</p>
+    </div>
+    <div class="agent-card fragment">
+      <div class="emoji">⚙️</div>
+      <h3>Shabalala</h3>
+      <p>Developer agent. Coding tasks, debugging, building scripts.</p>
+    </div>
+    <div class="agent-card fragment">
+      <div class="emoji">✍️</div>
+      <h3>Grizman</h3>
+      <p>Social media manager. Tweets, timeline, daily AI/tech digest.</p>
+    </div>
+  </div>
+  <p class="fragment dim" style="font-size:.65em; margin-top:1em;">Each agent has their own personality, tools, and memory.</p>
+  <aside class="notes">When a task is complex or slow, Jarvis spawns a sub-agent to handle it in the background. You get notified when it's done. It's like having a small team.</aside>
+</section>
+
+<!-- ⑨ THE FUTURE -->
+<section>
+  <h2>The Future 🚀</h2>
+  <div class="future-grid">
+    <div class="future-item fragment">
+      <span class="tag">📞 Jarvis can call people</span>
+      He has a SIM card. Why not use it? Call friends, record the chat.
+    </div>
+    <div class="future-item fragment">
+      <span class="tag">🧠 Ernst — AI accountant</span>
+      Tax rules, VAT, declarations. A dedicated finance brain.
+    </div>
+    <div class="future-item fragment">
+      <span class="tag">📧 Jarvis gets email</span>
+      Forward receipts — he handles the whole conversation.
+    </div>
+    <div class="future-item fragment">
+      <span class="tag">🥗 Food & calorie logging</span>
+      "Ate a bowl of pasta" → logged. Daily summary, zero friction.
+    </div>
+    <div class="future-item fragment">
+      <span class="tag">🌙 Nightly self-improvement</span>
+      Every night: agents review their own work and get smarter.
+    </div>
+    <div class="future-item fragment">
+      <span class="tag">🛒 Weekly shopping nudge</span>
+      Friday reminder to Johan &amp; Jaqueline — what do we need?
+    </div>
+  </div>
+  <aside class="notes">These are real ideas on the roadmap. Jarvis already has a SIM card — calling people is genuinely possible. Ernst would be a dedicated sub-agent for tax and accounting. The nightly self-improvement loop is a pattern called "agent reflection". Email is next up.</aside>
+</section>
+
+<!-- ⑩ CTA -->
+<section data-auto-animate>
+  <h2>Try it yourself ✨</h2>
+  <div class="cta-box fragment">
+    <p style="margin:0 0 .5em; font-size:.8em; color:var(--dim)">Get started</p>
+    <p style="margin:.3em 0; font-size:.9em;">🌐 &nbsp;<a href="https://openclaw.ai">openclaw.ai</a></p>
+    <p style="margin:.3em 0; font-size:.9em;">💬 &nbsp;<a href="https://discord.com/invite/clawd">discord.gg/clawd</a></p>
+    <p style="margin:.3em 0; font-size:.9em;">🧩 &nbsp;<a href="https://clawhub.com">clawhub.com</a> — skills marketplace</p>
+  </div>
+  <p class="fragment" style="margin-top:1.2em; font-size:.75em; color:var(--accent);">
+    "It runs on your machine. Your data stays yours."
+  </p>
+  <p class="fragment dim" style="font-size:.6em; margin-top:.5em;">
+    Questions? I'll demo live right now 👇
+  </p>
+  <aside class="notes">OpenClaw is open, your data never leaves your machine, and you can extend it with your own skills. If you want to try it, start at openclaw.ai. I'm happy to demo anything live.</aside>
+</section>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: true,
+    transition: 'slide',
+    transitionSpeed: 'fast',
+    backgroundTransition: 'fade',
+    plugins: [RevealNotes, RevealHighlight],
+    width: 1280,
+    height: 720,
+    margin: 0.04,
+    minScale: 0.2,
+    maxScale: 2.0,
+    center: true,
+  });
+</script>
+</body>
+</html>
