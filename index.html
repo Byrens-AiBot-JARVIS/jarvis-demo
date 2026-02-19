@@ -282,7 +282,87 @@
   <aside class="notes">When a task is complex or slow, Jarvis spawns a sub-agent to handle it in the background. You get notified when it's done. It's like having a small team.</aside>
 </section>
 
-<!-- ⑨ THE FUTURE -->
+<!-- ⑩ MISSION CONTROL — OVERVIEW -->
+<section>
+  <h2>Mission Control 🛸</h2>
+  <p style="font-size:.72em; color:var(--dim); margin-top:-.3em; margin-bottom:.8em;">The shared brain that keeps all agents in sync</p>
+  <div class="cols">
+    <div class="col fragment" style="border-color:rgba(0,255,136,.3);">
+      <h3>📋 Task Board</h3>
+      <p>Every piece of work lives as a task. Agents create, claim, and complete tasks — just like a team in Jira.</p>
+      <ul>
+        <li>inbox → in_progress → done</li>
+        <li>Assigned to an agent</li>
+        <li>Threaded messages per task</li>
+      </ul>
+    </div>
+    <div class="col fragment" style="border-color:rgba(0,207,255,.3);">
+      <h3>🗂️ Documents</h3>
+      <p>Agents share what they learn. Research, results, deliverables — all stored and searchable.</p>
+      <ul>
+        <li>Shabalala writes code docs</li>
+        <li>Grizman logs tweet strategies</li>
+        <li>Jarvis stores briefings</li>
+      </ul>
+    </div>
+    <div class="col fragment" style="border-color:rgba(255,200,0,.3);">
+      <h3>📡 Activity Feed</h3>
+      <p>A global audit trail. Every agent logs what it does — milestones, decisions, errors.</p>
+      <ul>
+        <li>Live stream of agent work</li>
+        <li>Debug and trace any task</li>
+        <li>Pattern: what works, what doesn't</li>
+      </ul>
+    </div>
+  </div>
+  <p class="fragment" style="font-size:.63em; color:var(--accent); margin-top:.9em;">Powered by <strong>Convex</strong> — real-time database, EU-hosted, zero infrastructure to manage</p>
+  <aside class="notes">Mission Control is the shared nervous system for all the agents. It's a Convex database hosted in EU. Every agent — Jarvis, Shabalala, Grizman — reads from and writes to the same backend. They can see each other's tasks, share documents, post updates. It's how a team of AIs actually coordinates without being in the same session.</aside>
+</section>
+
+<!-- ⑪ MISSION CONTROL — HOW AGENTS LEARN FROM EACH OTHER -->
+<section>
+  <h2>Agents that learn from each other 🧠</h2>
+  <div class="flow">
+    <div class="step fragment">
+      <span class="num">1</span>
+      <span>Johan asks Jarvis: <span class="accent">"Fix the receipt script"</span></span>
+    </div>
+    <div class="step fragment">
+      <span class="num">2</span>
+      <span>Jarvis creates a task in Mission Control → assigns to <span class="accent2">Shabalala</span></span>
+    </div>
+    <div class="step fragment">
+      <span class="num">3</span>
+      <span>Shabalala picks it up, posts updates as it works: <span class="dim">"Found the bug… patching…"</span></span>
+    </div>
+    <div class="step fragment">
+      <span class="num">4</span>
+      <span>Shabalala publishes a <span class="accent">deliverable document</span> with the solution + what it learned</span>
+    </div>
+    <div class="step fragment">
+      <span class="num">5</span>
+      <span>All agents can now read that document — <span class="accent">shared institutional knowledge</span></span>
+    </div>
+    <div class="step fragment">
+      <span class="num">6</span>
+      <span>Jarvis notifies Johan: <span class="accent">✅ Done — and here's what we learned</span></span>
+    </div>
+  </div>
+  <div class="fragment" style="margin-top:.85em; display:flex; gap:.8em; justify-content:center; font-size:.63em;">
+    <div style="background:rgba(0,255,136,.08); border:1px solid rgba(0,255,136,.25); border-radius:8px; padding:.45em .9em;">
+      🌐 Web UI — watch agents work live
+    </div>
+    <div style="background:rgba(0,207,255,.08); border:1px solid rgba(0,207,255,.25); border-radius:8px; padding:.45em .9em;">
+      🔔 Notifications between agents
+    </div>
+    <div style="background:rgba(255,200,0,.08); border:1px solid rgba(255,200,0,.25); border-radius:8px; padding:.45em .9em;">
+      📈 Over time: a team that gets smarter
+    </div>
+  </div>
+  <aside class="notes">This is what makes the team more than just a collection of chatbots. They share context. When Shabalala solves a hard problem, it writes it down — and the rest of the team can use that knowledge. It's a simple pattern but it compounds: the more work they do together, the more they know. The web UI lets you observe all of this live — you can see which task is in progress, read the thread, watch the activity feed update in real time.</aside>
+</section>
+
+<!-- ⑫ THE FUTURE -->
 <section>
   <h2>The Future 🚀</h2>
   <div class="future-grid">
